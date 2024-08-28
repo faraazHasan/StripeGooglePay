@@ -6,10 +6,11 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { initStripe } from "@stripe/stripe-react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,7 +20,11 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
+  useLayoutEffect(() => {
+    initStripe({
+      publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+    });
+  });
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
